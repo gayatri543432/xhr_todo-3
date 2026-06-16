@@ -22,3 +22,13 @@
 body{
     background-color: #f4f6f9;
 }
+.fa-trash-can,.fa-pen-to-square{
+    cursor: pointer;
+    transition: .3s;
+}
+.fa-trash-can:hover,.fa-pen-to-square:hover{
+    transform: scale(1.1);
+}
+.heighlight-row{
+    background-color: rgb(60, 60, 78);
+}

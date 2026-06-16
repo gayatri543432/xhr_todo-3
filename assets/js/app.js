@@ -14,11 +14,15 @@ let todoArr=[]
 let BASE_URL=`https://jsonplaceholder.typicode.com`
 let POST_URL=`${BASE_URL}/todos`
 
+function toolTips() {
+    $('[data-toggle="tooltip"]').tooltip();
+}
+
 function snackBar(msg,i){
     Swal.fire({
         title:msg,
         icon:i,
-        timer:300
+        timer:3000
     })
 }
 
@@ -59,12 +63,19 @@ function createTodos(arr){
                                     <td>${t.userId}</td>
                                     <td>${t.title}</td>
                                     <td>${t.completed?'<i class="fa-solid fa-square-check text-primary"></i>Complete':'<i class="fa-solid fa-spinner text-warning"></i>Pending'}</td>
-                                    <td><i onclick="onEdit(this)" class="fa-solid fa-pen-to-square fa-2x text-primary"></i></td>
-                                    <td><i onclick="onRemove(this)" class="fa-solid fa-trash-can fa-2x text-danger"></i></td>
+                                    <td><i onclick="onEdit(this)"
+                                     class="fa-solid fa-pen-to-square fa-2x text-primary"
+                                     data-toggle="tooltip"
+                                     title="Edit Button"
+                                     ></i></td>
+                                    <td><i onclick="onRemove(this)" class="fa-solid fa-trash-can fa-2x text-danger"
+                                    data-toggle="tooltip"
+                                     title="Remove Button"></i></td>
                                 </tr>`
                             
     })
     todoContainer.innerHTML=res
+    toolTips()
     
 }
 
@@ -90,16 +101,23 @@ function onTodoSubmit(e){
             tr.innerHTML=` <td></td>
                                     <td>${new_Todo.userId}</td>
                                     <td>${new_Todo.title}</td>
-                                    <td>${new_Todo.completed?'<i class="fa-solid fa-square-check"></i>Complete text-primary':'<i class="fa-solid fa-spinner text-warning"></i>Pending'}</td>
-                                    <td><i onclick="onEdit(this)" class="fa-solid fa-pen-to-square fa-2x text-primary"></i></td>
-                                    <td><i onclick="onRemove(this)" class="fa-solid fa-trash-can fa-2x text-danger"></i></td>`
+                                    <td>${new_Todo.completed?'<i class="fa-solid fa-square-check text-primary"></i>Complete ':'<i class="fa-solid fa-spinner text-warning"></i>Pending'}</td>
+                                    <td><i onclick="onEdit(this)" class="fa-solid fa-pen-to-square fa-2x text-primary"
+                                    data-toggle="tooltip"
+                                     title="Edit Button"></i></td>
+                                    <td><i onclick="onRemove(this)" class="fa-solid fa-trash-can fa-2x text-danger"
+                                    data-toggle="tooltip"
+                                     title="Remove Button"></i></td>`
                             // updateSrNo()
                             todoContainer.prepend(tr)
                             todoArr.unshift(res);
                             updateSrNo()
+                            
                             todoForm.reset()
                             spinner.classList.add('d-none')
+
                             snackBar('New Todo Created..','success')
+                            toolTips()
 
         }else{
             spinner.classList.add('d-none')
@@ -128,6 +146,11 @@ function onEdit(ele){
         ? 'true'
         : 'false';
 
+
+    todoForm.scrollIntoView({
+        behavior:'smooth',
+        block:'start'
+    })
     addBtn.classList.add('d-none');
     updateBtn.classList.remove('d-none');
 }
@@ -141,7 +164,7 @@ function onUpdateTodo(){
     let updatedTodo = {
         userId: userIdControl.value,
         title: titleControl.value,
-        completed: completedControl.value === 'true'
+        completed: completedControl.value  === 'true'
     };
 
   
@@ -170,7 +193,7 @@ function onUpdateTodo(){
 
             row.children[3].innerHTML =
                 updatedTodo.completed
-                ? '<i class="fa-solid fa-square-check text-success"></i> Complete'
+                ? '<i class="fa-solid fa-square-check text-primary"></i> Complete'
                 : '<i class="fa-solid fa-spinner text-warning"></i> Pending';
 
             todoForm.reset();
@@ -179,6 +202,16 @@ function onUpdateTodo(){
             updateBtn.classList.add('d-none');
               spinner.classList.add('d-none')
 
+              let updatedRow=document.getElementById(EDIT_ID);
+              updatedRow.classList.add('heighlight-row')
+              updatedRow.scrollIntoView({
+                behavior:'smooth',
+                block:'center'
+              })
+            
+              setTimeout(()=>{
+                updatedRow.classList.remove('heighlight-row')
+              },3000)
             localStorage.removeItem('EDIT_ID');
 
             snackBar('Todo Updated Successfully', 'success');
